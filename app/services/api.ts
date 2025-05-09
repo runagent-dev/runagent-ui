@@ -14,9 +14,17 @@ export interface Agent {
   id: string;
   name: string;
   description: string;
+  framework: string;
   status: string;
-  created_at: string;
   project_id: string;
+  user_id: string;
+  template_id: string;
+  deployment_id: string;
+  endpoint_url: string;
+  created_at: string;
+  updated_at: string;
+  last_run_at: string;
+  agent_id: string;
 }
 
 export interface Template {
@@ -69,6 +77,16 @@ export const api = {
       return response.data;
     } catch (error) {
       console.error('Error fetching agents:', error);
+      throw error;
+    }
+  },
+
+  getAgent: async (agentId: string): Promise<Agent> => {
+    try {
+      const response = await axios.get<Agent>(`${API_BASE_URL}/agents/${agentId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching agent:', error);
       throw error;
     }
   },
@@ -126,6 +144,25 @@ export const api = {
       await axios.delete(`${API_BASE_URL}/projects/${projectId}`);
     } catch (error) {
       console.error('Error deleting project:', error);
+      throw error;
+    }
+  },
+
+  deleteAgent: async (agentId: string): Promise<void> => {
+    try {
+      await axios.delete(`${API_BASE_URL}/agents/${agentId}`);
+    } catch (error) {
+      console.error('Error deleting agent:', error);
+      throw error;
+    }
+  },
+
+  getAgentSummary: async (projectId: string, agentId: string): Promise<any> => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/projects/${projectId}/agents/${agentId}/summary`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching agent summary:', error);
       throw error;
     }
   }

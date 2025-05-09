@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Eye } from "lucide-react";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -164,12 +165,14 @@ export default function TemplatesPage() {
                   <TableCell>
                     {new Date(template.created_at).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="flex gap-2">
                     <Button
                       variant="outline"
+                      size="icon"
                       onClick={() => router.push(`/templates/${template.id}`)}
+                      aria-label="View"
                     >
-                      View
+                      <Eye className="w-4 h-4" />
                     </Button>
                   </TableCell>
                 </TableRow>

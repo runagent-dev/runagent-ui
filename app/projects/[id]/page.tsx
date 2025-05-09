@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Eye } from "lucide-react"
 
 export default function ProjectDetail({
   params,
@@ -29,6 +30,10 @@ export default function ProjectDetail({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [summaryDialogOpen, setSummaryDialogOpen] = useState(false)
+  const [summaryLoading, setSummaryLoading] = useState(false)
+  const [agentSummary, setAgentSummary] = useState<any>(null)
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchProjectAndAgents()
@@ -77,6 +82,21 @@ export default function ProjectDetail({
       console.error("Failed to delete project:", err)
     } finally {
       setIsDeleting(false)
+    }
+  }
+
+  const handleViewSummary = async (agent: Agent) => {
+    setSummaryLoading(true)
+    setSelectedAgentId(agent.id)
+    try {
+      const summary = await api.getAgentSummary(agent.project_id, agent.id)
+      setAgentSummary(summary)
+      setSummaryDialogOpen(true)
+    } catch (err) {
+      setAgentSummary(null)
+      setSummaryDialogOpen(true)
+    } finally {
+      setSummaryLoading(false)
     }
   }
 
@@ -209,6 +229,7 @@ export default function ProjectDetail({
                         <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Created At
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -236,6 +257,32 @@ export default function ProjectDetail({
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             {new Date(agent.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Dialog open={summaryDialogOpen && selectedAgentId === agent.id} onOpenChange={(open) => { setSummaryDialogOpen(open); if (!open) setAgentSummary(null); }}>
+                              <DialogTrigger asChild>
+                                <button
+                                  className="p-2 rounded hover:bg-muted"
+                                  aria-label="View Summary"
+                                  onClick={() => handleViewSummary(agent)}
+                                  disabled={summaryLoading}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-3xl w-full">
+                                <DialogHeader>
+                                  <DialogTitle>Agent Summary</DialogTitle>
+                                </DialogHeader>
+                                {summaryLoading ? (
+                                  <div>Loading...</div>
+                                ) : agentSummary ? (
+                                  <pre className="overflow-x-auto whitespace-pre-wrap text-sm bg-muted p-4 rounded max-h-[60vh]">{JSON.stringify(agentSummary, null, 2)}</pre>
+                                ) : (
+                                  <div>Failed to load summary.</div>
+                                )}
+                              </DialogContent>
+                            </Dialog>
                           </td>
                         </motion.tr>
                       ))}
