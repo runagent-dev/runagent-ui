@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, Settings } from "lucide-react";
+import { LayoutDashboard, Users, Settings, FileText } from "lucide-react";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -23,6 +23,11 @@ const navItems = [
     icon: Users,
   },
   {
+    name: "Templates",
+    href: "/templates",
+    icon: FileText,
+  },
+  {
     name: "Settings",
     href: "/settings",
     icon: Settings,
@@ -36,8 +41,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
       <div className="w-64 border-r bg-card">
-        <div className="flex h-16 items-center border-b px-6">
-          <h1 className="text-lg font-semibold">RunAgent</h1>
+        <div className="flex flex-col h-20 items-center border-b p-6 justify-center">
+          <img src="/logo.png" alt="RunAgent Logo" className="h-12" />
         </div>
         <nav className="space-y-1 p-4">
           {navItems.map((item) => {
