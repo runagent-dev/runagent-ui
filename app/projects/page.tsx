@@ -26,7 +26,9 @@ import { useRouter } from "next/navigation";
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -49,10 +51,14 @@ export default function ProjectsPage() {
 
   const handleCreateProject = async (data: { name: string; description: string }) => {
     try {
+      setIsCreating(true);
       await api.createProject(data);
-      fetchProjects(); // Refresh the list after creating
+      await fetchProjects(); // Refresh the list after creating
+      setIsDialogOpen(false); // Close the dialog after successful creation
     } catch (err) {
       console.error("Failed to create project:", err);
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -66,7 +72,7 @@ export default function ProjectsPage() {
       >
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Projects</h1>
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>Create Project</Button>
             </DialogTrigger>
@@ -87,14 +93,14 @@ export default function ProjectsPage() {
               >
                 <div className="space-y-2">
                   <Label htmlFor="name">Project Name</Label>
-                  <Input id="name" name="name" required />
+                  <Input id="name" name="name" required disabled={isCreating} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="description">Description</Label>
-                  <Input id="description" name="description" required />
+                  <Input id="description" name="description" required disabled={isCreating} />
                 </div>
-                <Button type="submit" className="w-full">
-                  Create
+                <Button type="submit" className="w-full" disabled={isCreating}>
+                  {isCreating ? "Creating..." : "Create Project"}
                 </Button>
               </form>
             </DialogContent>
