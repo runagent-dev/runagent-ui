@@ -14,22 +14,22 @@ interface DashboardLayoutProps {
 const navItems = [
   {
     name: "Projects",
-    href: "/projects",
+    href: "/dashboard/projects",
     icon: LayoutDashboard,
   },
   {
     name: "Agents",
-    href: "/agents",
+    href: "/dashboard/agents",
     icon: Users,
   },
   {
     name: "Templates",
-    href: "/templates",
+    href: "/dashboard/templates",
     icon: FileText,
   },
   {
     name: "Settings",
-    href: "/settings",
+    href: "/dashboard/settings",
     icon: Settings,
   },
 ];
@@ -42,7 +42,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <div className="w-64 border-r bg-card">
         <div className="flex flex-col h-20 items-center border-b p-6 justify-center">
-          <img src="/logo.png" alt="RunAgent Logo" className="h-12" />
+          <div className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+            <img 
+              src="/lovable-uploads/eb3783d4-b821-454b-879d-1b07174beb31.png" 
+              alt="RunAgent Logo" 
+              className="h-8 w-auto mr-2" 
+            />
+            <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">Run</span>Agent
+          </div>
         </div>
         <nav className="space-y-1 p-4">
           {navItems.map((item) => {

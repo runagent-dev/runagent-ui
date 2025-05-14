@@ -167,7 +167,7 @@ export default function ProjectsPage() {
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => router.push(`/projects/${project.id}`)}
+                      onClick={() => router.push(`/dashboard/projects/${project.id}`)}
                       aria-label="View"
                     >
                       <Eye className="w-4 h-4" />

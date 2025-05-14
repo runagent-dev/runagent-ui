@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { DashboardLayout } from "@/components/layout/dashboard-layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "RunAgent Dashboard",
-  description: "Manage your projects and agents",
+  title: "RunAgent - Deploy AI Agents Anywhere",
+  description: "Deploy AI agents from any framework with just a single command.",
 };
 
 export default function RootLayout({
@@ -17,9 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <DashboardLayout>{children}</DashboardLayout>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
