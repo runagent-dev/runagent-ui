@@ -6,18 +6,18 @@ export default function Testimonials() {
   const testimonials = [
     {
       quote: "RunAgent cut our AI deployment time by 90%. We went from spending days configuring infrastructure to deploying in minutes.",
-      author: "Sarah Chen",
-      role: "CTO, TechFuture Inc."
+      author: "Sawradip Saha",
+      role: "Founding Engineer, FlowGenX AI"
     },
     {
       quote: "The seamless integration with multiple frameworks lets our team use the right tool for each use case without worrying about deployment.",
-      author: "Michael Rodriguez",
-      role: "AI Lead, DataFlow Systems"
+      author: "Radeen Mostafa",
+      role: "AI Engineer, MagicMind"
     },
     {
       quote: "As an ML engineer, I want to focus on building great agents, not DevOps. RunAgent lets me deploy my LangGraph flows with zero hassle.",
-      author: "Priya Sharma",
-      role: "Machine Learning Engineer, AIStudio"
+      author: "SK Nahin",
+      role: "Machine Learning Engineer, Verbex"
     }
   ];
 
@@ -53,7 +53,7 @@ export default function Testimonials() {
         </div>
 
         <div className="mt-20">
-          <p className="text-center text-runagent-muted mb-8">TRUSTED BY INNOVATORS WORLDWIDE</p>
+          <p className="text-center text-runagent-muted mb-8">TO BE TRUSTED BY INNOVATORS WORLDWIDE</p>
           <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
             {logos.map((logo, index) => (
               <div key={index} className="text-gray-400 text-xl font-bold opacity-70">{logo}</div>

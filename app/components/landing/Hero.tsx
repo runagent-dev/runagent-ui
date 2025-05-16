@@ -9,7 +9,7 @@ const Hero = () => {
     <div className="relative pt-24 pb-16 md:py-32 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      
+
       {/* Background gradient */}
       <div className="absolute top-20 -left-60 w-[500px] h-[500px] bg-gradient-radial from-runagent-purple/20 to-transparent opacity-30 rounded-full"></div>
       <div className="absolute -top-20 -right-60 w-[500px] h-[500px] bg-gradient-radial from-runagent-purple/10 to-transparent opacity-30 rounded-full"></div>
@@ -19,24 +19,33 @@ const Hero = () => {
           <div className="inline-flex items-center gap-2 bg-runagent-light-blue/40 text-runagent-purple px-3 py-1.5 rounded-full text-sm font-medium mb-8">
             🚀 Introducing RunAgent CLI: Deploy Agents Anywhere
           </div>
-          
+
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            Kick off with a bang<br />
-            with <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">RunAgent</span>
+            Kick off with a bang
+            <br />
+            with{' '}
+            <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
+              RunAgent
+            </span>
           </h1>
-          
+
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-10">
-            Deploy AI agents from any framework - LangChain, LangGraph, Agno, 
+            Deploy AI agents from any framework - LangChain, LangGraph, Agno,
             LlamaIndex, and more with just a single command.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button 
-              size="default" 
+            <Button
+              size="default"
               className="bg-green-600 hover:bg-green-700 text-white font-medium px-12 py-6 rounded-full w-64"
-              onClick={() => window.open('https://forms.gle/example-google-form-link', '_blank')}
+              onClick={() =>
+                window.open(
+                  'https://forms.gle/example-google-form-link',
+                  '_blank'
+                )
+              }
             >
-              Join Waiting List
+              Join Waitlist
             </Button>
           </div>
         </div>
@@ -45,11 +54,24 @@ const Hero = () => {
           <div className="code-window p-4 text-left">
             <pre className="text-sm md:text-base overflow-x-auto">
               <code>
-                <span className="text-gray-400">$</span> <span className="text-green-400">pip install runagent</span><br />
-                <span className="text-gray-400">$</span> <span className="text-yellow-400">runagent init my-agent</span><br />
-                <span className="text-green-300">✓ Agent initialized successfully!</span><br />
-                <span className="text-gray-400">$</span> <span className="text-runagent-purple">runagent deploy</span><br />
-                <span className="text-green-300">✓ Agent deployed! Accessible at: runagent.live</span>
+                <span className="text-gray-400">$</span>{' '}
+                <span className="text-green-400">pip install runagent</span>
+                <br />
+                <span className="text-gray-400">$</span>{' '}
+                <span className="text-yellow-400">
+                  runagent init my-agent --langchain
+                </span>
+                <br />
+                <span className="text-green-300">
+                  ✓ Agent initialized successfully!
+                </span>
+                <br />
+                <span className="text-gray-400">$</span>{' '}
+                <span className="text-runagent-purple">runagent deploy</span>
+                <br />
+                <span className="text-green-300">
+                  ✓ Agent deployed! Accessible at: runagent.live
+                </span>
               </code>
             </pre>
           </div>
@@ -85,4 +107,4 @@ const Hero = () => {
   );
 };
 
-export default Hero; 
+export default Hero;
