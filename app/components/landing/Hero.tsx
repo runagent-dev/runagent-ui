@@ -38,11 +38,10 @@ const Hero = () => {
             <Button
               size="default"
               className="bg-green-600 hover:bg-green-700 text-white font-medium px-12 py-6 rounded-full w-64"
-              onClick={() =>
-                window.open(
-                  'https://forms.gle/example-google-form-link',
-                  '_blank'
-                )
+              onClick={() => window.open(
+                'https://docs.google.com/forms/d/e/1FAIpQLSffYRhZtDcQEdZu_1VomwBbn-rziGTxgha3iHRmAEIkxFL3gQ/viewform?usp=header',
+                '_blank'
+              )
               }
             >
               Join Waiting List

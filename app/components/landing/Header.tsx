@@ -61,7 +61,10 @@ const Header = () => {
           )}
           <Button 
             className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10"
-            onClick={() => window.open('https://forms.gle/example-google-form-link', '_blank')}
+            onClick={() => window.open(
+              'https://docs.google.com/forms/d/e/1FAIpQLSffYRhZtDcQEdZu_1VomwBbn-rziGTxgha3iHRmAEIkxFL3gQ/viewform?usp=header',
+              '_blank'
+            )}
           >
             Join Waiting List
           </Button>
