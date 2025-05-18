@@ -15,7 +15,7 @@ const Hero = () => {
       <div className="absolute -top-20 -right-60 w-[500px] h-[500px] bg-gradient-radial from-runagent-purple/10 to-transparent opacity-30 rounded-full"></div>
 
       <div className="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
-        <div className="text-center mb-6">
+        <div className="text-center">
           <div className="inline-flex items-center gap-2 bg-runagent-light-blue/40 text-runagent-purple px-3 py-1.5 rounded-full text-sm font-medium mb-8">
             🚀 Introducing RunAgent CLI: Deploy Agents Anywhere
           </div>
@@ -45,7 +45,7 @@ const Hero = () => {
                 )
               }
             >
-              Join Waitlist
+              Join Waiting List
             </Button>
           </div>
         </div>

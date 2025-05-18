@@ -26,10 +26,12 @@ export default function Footer() {
                 alt="RunAgent Logo"
                 className="h-8 w-auto mr-2"
               />
+              <span>
               <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
                 Run
               </span>
               Agent
+            </span>
             </div>
             <p className="text-gray-400 mb-4">
               Deploy AI agents from any framework with just a single command.

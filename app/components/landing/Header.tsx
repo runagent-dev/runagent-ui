@@ -4,9 +4,11 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { UserButton, SignInButton, useUser, SignOutButton } from "@clerk/nextjs";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const { isSignedIn } = useUser();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 md:px-8 bg-runagent-dark-blue/80 backdrop-blur-md border-b border-runagent-light-blue">
@@ -34,21 +36,32 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex items-center space-x-4">
-          <Button
-            variant="outline"
-            className="border-runagent-purple text-runagent-purple hover:bg-runagent-purple/10 rounded-full"
-          >
-            Sign In
-          </Button>
-          <Button
-            className="bg-green-600 hover:bg-green-700 text-white w-full rounded-full"
-            onClick={() =>
-              window.open(
-                'https://docs.google.com/forms/d/e/1FAIpQLSffYRhZtDcQEdZu_1VomwBbn-rziGTxgha3iHRmAEIkxFL3gQ/viewform?usp=header',
-                '_blank'
-              )
-            }
+        <div className="flex items-center gap-4">
+          {isSignedIn ? (
+            <>
+              <Link href="/dashboard" className="text-sm text-white hover:text-gray-300">
+                Dashboard
+              </Link>
+              <UserButton afterSignOutUrl="/" />
+              <SignOutButton>
+                <Button 
+                  variant="ghost" 
+                  className="text-white hover:text-gray-300"
+                >
+                  Sign Out
+                </Button>
+              </SignOutButton>
+            </>
+          ) : (
+            <SignInButton mode="modal">
+              <button className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800">
+                Sign In
+              </button>
+            </SignInButton>
+          )}
+          <Button 
+            className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10"
+            onClick={() => window.open('https://forms.gle/example-google-form-link', '_blank')}
           >
             Join Waiting List
           </Button>
@@ -82,22 +95,33 @@ const Header = () => {
               Community
             </NavLink>
             <div className="pt-4 flex flex-col space-y-3">
-              <Button
-                variant="outline"
-                className="border-runagent-purple text-runagent-purple hover:bg-runagent-purple/10 w-full rounded-full"
+              {isSignedIn ? (
+                <>
+                  <Link href="/dashboard" className="text-sm text-white hover:text-gray-300">
+                    Dashboard
+                  </Link>
+                  <UserButton afterSignOutUrl="/" />
+                  <SignOutButton>
+                    <Button 
+                      variant="ghost" 
+                      className="text-white hover:text-gray-300 w-full"
+                    >
+                      Sign Out
+                    </Button>
+                  </SignOutButton>
+                </>
+              ) : (
+                <SignInButton mode="modal">
+                  <button className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 w-full">
+                    Sign In
+                  </button>
+                </SignInButton>
+              )}
+              <Button 
+                className="bg-green-600 hover:bg-green-700 text-white w-full rounded-full"
+                onClick={() => window.open('https://forms.gle/example-google-form-link', '_blank')}
               >
-                Sign In
-              </Button>
-              <Button
-                className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10"
-                onClick={() =>
-                  window.open(
-                    'https://docs.google.com/forms/d/e/1FAIpQLSffYRhZtDcQEdZu_1VomwBbn-rziGTxgha3iHRmAEIkxFL3gQ/viewform?usp=header',
-                    '_blank'
-                  )
-                }
-              >
-                Join Waitlist
+                Join Waiting List
               </Button>
             </div>
           </div>
