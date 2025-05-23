@@ -44,16 +44,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-col h-20 items-center border-b p-6 justify-center">
           <div className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <img 
-                src="/lovable-uploads/eb3783d4-b821-454b-879d-1b07174beb31.png" 
-                alt="RunAgent Logo" 
-                className="h-8 w-auto mr-2" 
+              <img
+                src="/lovable-uploads/eb3783d4-b821-454b-879d-1b07174beb31.png"
+                alt="RunAgent Logo"
+                className="h-8 w-auto"
               />
-              <span>
+              <span className="text-xl font-bold">
                 <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
                   Run
                 </span>
-                Agent
+                <span className="text-foreground">Agent</span>
               </span>
             </Link>
           </div>

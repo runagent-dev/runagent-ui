@@ -5,16 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { UserButton, SignInButton, useUser, SignOutButton } from "@clerk/nextjs";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { isSignedIn } = useUser();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 md:px-8 bg-runagent-dark-blue/80 backdrop-blur-md border-b border-runagent-light-blue">
+    <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 md:px-8 bg-background/80 backdrop-blur-md border-b">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <div className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+          <div className="text-xl md:text-2xl font-bold flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
               <img
                 src="/lovable-uploads/eb3783d4-b821-454b-879d-1b07174beb31.png"
@@ -39,13 +40,14 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           {isSignedIn ? (
             <>
               <UserButton afterSignOutUrl="/" />
               <SignOutButton>
                 <Button 
                   variant="ghost" 
-                  className="text-white hover:text-gray-300"
+                  className="hover:text-foreground"
                 >
                   Sign Out
                 </Button>
@@ -53,7 +55,7 @@ const Header = () => {
             </>
           ) : (
             <SignInButton mode="modal">
-              <button className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800">
+              <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm hover:bg-primary/90">
                 Sign In
               </button>
             </SignInButton>
@@ -70,7 +72,7 @@ const Header = () => {
         </div>
 
         <button
-          className="md:hidden text-white p-2"
+          className="md:hidden p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -79,7 +81,7 @@ const Header = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-16 inset-x-0 p-4 bg-runagent-dark-blue/90 backdrop-blur-md border-b border-runagent-light-blue">
+        <div className="md:hidden absolute top-16 inset-x-0 p-4 bg-background/90 backdrop-blur-md border-b">
           <div className="flex flex-col space-y-4">
             <NavLink href="#features" onClick={() => setIsMenuOpen(false)}>
               Features
@@ -105,7 +107,7 @@ const Header = () => {
                   <SignOutButton>
                     <Button 
                       variant="ghost" 
-                      className="text-white hover:text-gray-300 w-full"
+                      className="hover:text-foreground w-full"
                     >
                       Sign Out
                     </Button>
@@ -113,7 +115,7 @@ const Header = () => {
                 </>
               ) : (
                 <SignInButton mode="modal">
-                  <button className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 w-full">
+                  <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm hover:bg-primary/90 w-full">
                     Sign In
                   </button>
                 </SignInButton>
@@ -143,7 +145,7 @@ const NavLink = ({ href, children, onClick = () => {} }: NavLinkProps) => {
     return (
       <a
         href={href}
-        className="text-gray-300 hover:text-white transition-colors duration-200"
+        className="text-muted-foreground hover:text-foreground transition-colors duration-200"
         onClick={onClick}
       >
         {children}
@@ -154,7 +156,7 @@ const NavLink = ({ href, children, onClick = () => {} }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className="text-gray-300 hover:text-white transition-colors duration-200"
+      className="text-muted-foreground hover:text-foreground transition-colors duration-200"
       onClick={onClick}
     >
       {children}

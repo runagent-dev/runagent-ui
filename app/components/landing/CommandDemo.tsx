@@ -7,20 +7,7 @@ type CommandType = 'init' | 'deploy' | 'execute' | 'logs';
 
 interface CommandOutput {
   text: string;
-  type:
-    | 'process'
-    | 'success'
-    | 'info'
-    | 'directory'
-    | 'file'
-    | 'command'
-    | 'url'
-    | 'heading'
-    | 'result'
-    | 'log-info'
-    | 'log-debug'
-    | 'log-warn'
-    | 'blank';
+  type: 'process' | 'success' | 'error' | 'info' | 'command' | 'directory' | 'file' | 'blank' | 'heading' | 'result';
 }
 
 interface Command {
@@ -67,20 +54,18 @@ const CommandDemo = () => {
       description: 'Deploy your agent to production with a single command',
       command: 'runagent deploy',
       output: [
-        { text: '> Analyzing agent structure...', type: 'process' },
-        { text: '> Detecting framework: LangGraph', type: 'process' },
-        { text: '> Packaging agent...', type: 'process' },
-        { text: '> Uploading to runagent cloud...', type: 'process' },
-        { text: '✓ Agent deployed successfully!', type: 'success' },
+        { text: '> Building agent package...', type: 'process' },
+        { text: '> Validating configuration...', type: 'process' },
+        { text: '> Deploying to cloud infrastructure...', type: 'process' },
+        { text: '✓ Deployment successful!', type: 'success' },
         { text: '', type: 'blank' },
-        { text: 'Agent URL: https://agent.runagent.ai/my-agent', type: 'url' },
-        { text: 'Agent ID: ra_a1b2c3d4e5', type: 'info' },
+        { text: 'Agent Details:', type: 'heading' },
+        { text: '  ID: ra_a1b2c3d4e5', type: 'info' },
+        { text: '  Status: Running', type: 'info' },
+        { text: '  Endpoint: https://api.runagent.ai/ra_a1b2c3d4e5', type: 'info' },
         { text: '', type: 'blank' },
-        { text: 'Monitor logs: runagent logs', type: 'command' },
-        {
-          text: 'Execute commands: runagent execute "Ask a question"',
-          type: 'command',
-        },
+        { text: 'Monitor your agent:', type: 'info' },
+        { text: '  runagent logs ra_a1b2c3d4e5', type: 'command' },
       ],
     },
     execute: {
@@ -122,144 +107,91 @@ const CommandDemo = () => {
     },
     logs: {
       title: 'View Logs',
-      description: 'Monitor your agent activity with real-time logs',
-      command: 'runagent logs --follow',
+      description: 'Monitor your agent in real-time with detailed logs',
+      command: 'runagent logs ra_a1b2c3d4e5',
       output: [
-        {
-          text: '> Connecting to log stream for agent ra_a1b2c3d4e5...',
-          type: 'process',
-        },
-        {
-          text: '[2025-05-12 08:14:23] INFO: Agent started successfully',
-          type: 'log-info',
-        },
-        {
-          text: '[2025-05-12 08:15:10] INFO: Received query: "Latest financial reports"',
-          type: 'log-info',
-        },
-        {
-          text: '[2025-05-12 08:15:12] DEBUG: Connecting to data source...',
-          type: 'log-debug',
-        },
-        {
-          text: '[2025-05-12 08:15:14] INFO: Retrieved 5 reports from database',
-          type: 'log-info',
-        },
-        {
-          text: '[2025-05-12 08:15:16] INFO: Processing reports with LLM...',
-          type: 'log-info',
-        },
-        {
-          text: '[2025-05-12 08:15:20] WARN: Rate limit approaching (80%)',
-          type: 'log-warn',
-        },
-        {
-          text: '[2025-05-12 08:15:25] INFO: Response generated and sent to user',
-          type: 'log-info',
-        },
-        {
-          text: '[2025-05-12 08:16:02] INFO: New connection from 192.168.1.105',
-          type: 'log-info',
-        },
-        { text: '> Log streaming active... (Ctrl+C to exit)', type: 'process' },
+        { text: '> Connecting to agent logs...', type: 'process' },
+        { text: '> Stream started', type: 'success' },
+        { text: '', type: 'blank' },
+        { text: '[2025-05-12 14:23:45] Request received', type: 'info' },
+        { text: '[2025-05-12 14:23:46] Processing query...', type: 'info' },
+        { text: '[2025-05-12 14:23:47] Query completed', type: 'info' },
+        { text: '[2025-05-12 14:23:48] Response sent', type: 'info' },
+        { text: '', type: 'blank' },
+        { text: 'Performance Metrics:', type: 'heading' },
+        { text: '  Response Time: 2.3s', type: 'info' },
+        { text: '  Memory Usage: 256MB', type: 'info' },
+        { text: '  CPU Usage: 12%', type: 'info' },
       ],
     },
   };
 
   const getCommandLineDisplay = () => {
     const command = commands[activeCommand];
-
     return (
-      <div className="gradient-border w-full bg-runagent-light-blue/60 rounded-lg terminal-shadow">
-        <div className="bg-runagent-light-blue/80 px-4 py-2 rounded-t-lg border-b border-gray-700 flex items-center">
-          <div className="flex space-x-2 mr-4">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+      <div className="bg-card/50 backdrop-blur-sm border border-border rounded-lg p-6 shadow-lg">
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-3 h-3 rounded-full bg-destructive"></div>
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
           </div>
-          <p className="text-gray-400 font-mono text-sm">
-            Terminal — {command.title}
-          </p>
+          <div className="font-mono text-sm text-muted-foreground">
+            {command.command}
+          </div>
         </div>
-        <div className="code-window p-4 text-left">
-          <pre className="text-sm md:text-base overflow-x-auto">
-            <code>
-              <span className="text-gray-400">$</span>{' '}
-              <span className="text-runagent-purple">{command.command}</span>
-              <br />
-              {command.output.map((line: CommandOutput, index: number) => {
-                let textClass = '';
+        <div className="font-mono text-sm space-y-1">
+          {command.output.map((line, index) => {
+            const getTextColor = () => {
+              switch (line.type) {
+                case 'process':
+                  return 'text-blue-400';
+                case 'success':
+                  return 'text-green-400';
+                case 'error':
+                  return 'text-red-400';
+                case 'info':
+                  return 'text-muted-foreground';
+                case 'command':
+                  return 'text-primary';
+                case 'directory':
+                  return 'text-blue-400';
+                case 'file':
+                  return 'text-green-400';
+                case 'heading':
+                  return 'text-foreground font-semibold';
+                case 'result':
+                  return 'text-muted-foreground';
+                default:
+                  return 'text-muted-foreground';
+              }
+            };
 
-                switch (line.type) {
-                  case 'process':
-                    textClass = 'text-blue-300';
-                    break;
-                  case 'success':
-                    textClass = 'text-green-300';
-                    break;
-                  case 'info':
-                    textClass = 'text-gray-300';
-                    break;
-                  case 'directory':
-                    textClass = 'text-yellow-300 ml-2';
-                    break;
-                  case 'file':
-                    textClass = 'text-blue-200 ml-4';
-                    break;
-                  case 'command':
-                    textClass = 'text-purple-300 ml-4';
-                    break;
-                  case 'url':
-                    textClass = 'text-green-300 font-bold';
-                    break;
-                  case 'heading':
-                    textClass = 'text-yellow-300 font-bold';
-                    break;
-                  case 'result':
-                    textClass = 'text-gray-300 ml-4';
-                    break;
-                  case 'log-info':
-                    textClass = 'text-blue-300';
-                    break;
-                  case 'log-debug':
-                    textClass = 'text-gray-400';
-                    break;
-                  case 'log-warn':
-                    textClass = 'text-yellow-300';
-                    break;
-                  default:
-                    textClass = 'text-gray-300';
-                }
-
-                return line.text ? (
-                  <span key={index} className={textClass}>
-                    {line.text}
-                    <br />
-                  </span>
-                ) : (
-                  <br key={index} />
-                );
-              })}
-            </code>
-          </pre>
+            return (
+              <div key={index} className={getTextColor()}>
+                {line.text}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
   };
 
   return (
-    <section
-      id="commands"
-      className="py-16 md:py-24 px-4 md:px-8 bg-runagent-light-blue/30"
-    >
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
-          Powerful <span className="text-runagent-purple">CLI Commands</span>
-        </h2>
-        <p className="text-xl text-gray-300 text-center max-w-3xl mx-auto mb-16">
-          RunAgent provides intuitive commands for managing your AI agents
-          throughout their lifecycle
-        </p>
+    <section className="py-20 bg-background relative">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-background to-background" />
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+            Simple yet powerful commands
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Deploy and manage your AI agents with our intuitive command-line interface.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-4 space-y-4">
@@ -269,20 +201,20 @@ const CommandDemo = () => {
                 onClick={() => setActiveCommand(cmd as CommandType)}
                 className={`p-4 rounded-lg cursor-pointer transition-all duration-200 ${
                   activeCommand === cmd
-                    ? 'bg-runagent-purple/20 border border-runagent-purple/50'
-                    : 'bg-runagent-light-blue border border-gray-700 hover:border-gray-500'
+                    ? 'bg-primary/20 border border-primary/50 shadow-lg'
+                    : 'bg-card/50 backdrop-blur-sm border border-border hover:border-primary/50 hover:shadow-md'
                 }`}
               >
                 <h3
                   className={`font-mono font-semibold mb-1 ${
                     activeCommand === cmd
-                      ? 'text-runagent-purple'
-                      : 'text-white'
+                      ? 'text-primary'
+                      : 'text-foreground'
                   }`}
                 >
                   runagent {cmd}
                 </h3>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-muted-foreground">
                   {commands[cmd].description}
                 </p>
               </div>

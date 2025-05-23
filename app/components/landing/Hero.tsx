@@ -11,12 +11,12 @@ const Hero = () => {
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
 
       {/* Background gradient */}
-      <div className="absolute top-20 -left-60 w-[500px] h-[500px] bg-gradient-radial from-runagent-purple/20 to-transparent opacity-30 rounded-full"></div>
-      <div className="absolute -top-20 -right-60 w-[500px] h-[500px] bg-gradient-radial from-runagent-purple/10 to-transparent opacity-30 rounded-full"></div>
+      <div className="absolute top-20 -left-60 w-[500px] h-[500px] bg-gradient-radial from-primary/20 to-transparent opacity-30 rounded-full"></div>
+      <div className="absolute -top-20 -right-60 w-[500px] h-[500px] bg-gradient-radial from-primary/10 to-transparent opacity-30 rounded-full"></div>
 
       <div className="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-runagent-light-blue/40 text-runagent-purple px-3 py-1.5 rounded-full text-sm font-medium mb-8">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium mb-8">
             🚀 Introducing RunAgent CLI: Deploy Agents Anywhere
           </div>
 
@@ -29,7 +29,7 @@ const Hero = () => {
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-10">
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-10">
             Deploy AI agents from any framework - LangChain, LangGraph, Agno,
             LlamaIndex, and more with just a single command.
           </p>
