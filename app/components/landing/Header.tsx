@@ -7,6 +7,13 @@ import Link from 'next/link';
 import { UserButton, SignInButton, useUser, SignOutButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme-toggle";
 
+const navigation = [
+  { name: "Features", href: "/#features" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Blog", href: "/blog" },
+  { name: "Documentation", href: "/docs" },
+];
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { isSignedIn } = useUser();
@@ -32,10 +39,12 @@ const Header = () => {
           </div>
 
           <div className="hidden ml-10 space-x-6 md:flex items-center">
-            <NavLink href="#features">Features</NavLink>
+            {navigation.map((item) => (
+              <NavLink key={item.name} href={item.href}>
+                {item.name}
+              </NavLink>
+            ))}
             {isSignedIn && <NavLink href="/dashboard/projects">Dashboard</NavLink>}
-            <NavLink href="#documentation">Docs</NavLink>
-            <NavLink href="#community">Community</NavLink>
           </div>
         </div>
 
@@ -83,9 +92,15 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden absolute top-16 inset-x-0 p-4 bg-background/90 backdrop-blur-md border-b">
           <div className="flex flex-col space-y-4">
-            <NavLink href="#features" onClick={() => setIsMenuOpen(false)}>
-              Features
-            </NavLink>
+            {navigation.map((item) => (
+              <NavLink 
+                key={item.name} 
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </NavLink>
+            ))}
             {isSignedIn && (
               <NavLink
                 href="/dashboard/projects"
@@ -94,12 +109,6 @@ const Header = () => {
                 Dashboard
               </NavLink>
             )}
-            <NavLink href="#documentation" onClick={() => setIsMenuOpen(false)}>
-              Docs
-            </NavLink>
-            <NavLink href="#community" onClick={() => setIsMenuOpen(false)}>
-              Community
-            </NavLink>
             <div className="pt-4 flex flex-col space-y-3">
               {isSignedIn ? (
                 <>
@@ -122,7 +131,10 @@ const Header = () => {
               )}
               <Button 
                 className="bg-green-600 hover:bg-green-700 text-white w-full rounded-full"
-                onClick={() => window.open('https://forms.gle/example-google-form-link', '_blank')}
+                onClick={() => window.open(
+                  'https://docs.google.com/forms/d/e/1FAIpQLSffYRhZtDcQEdZu_1VomwBbn-rziGTxgha3iHRmAEIkxFL3gQ/viewform?usp=header',
+                  '_blank'
+                )}
               >
                 Join Waiting List
               </Button>
