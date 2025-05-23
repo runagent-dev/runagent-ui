@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { jwtDecode } from "jwt-decode";
 import {
   Dialog,
   DialogContent,
@@ -23,8 +24,17 @@ import {
 import { api, Project } from "@/services/api";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2, Eye } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
+
+interface DecodedToken {
+  sub: string;
+  email: string;
+  sid: string;  // session ID from Clerk
+  // add other fields you need from the JWT
+}
 
 export default function ProjectsPage() {
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -37,14 +47,28 @@ export default function ProjectsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  const decodeToken = (token: string): DecodedToken => {
+    try {
+      return jwtDecode<DecodedToken>(token);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      throw error;
+    }
+  };
 
   const fetchProjects = async () => {
+    if (!isLoaded || !isSignedIn) return;
+    const token = await getToken();
+    if (!token) return;
+
     try {
       setIsLoading(true);
-      const data = await api.getProjects();
+      // Store the token in localStorage for the axios interceptor
+      localStorage.setItem('clerk-token', token);
+      const decodedToken = decodeToken(token);
+      const session_id = decodedToken.sid;
+      console.log('Using session ID:', session_id);
+      const data = await api.getProjects(session_id);
       setProjects(data);
       setError(null);
     } catch (err) {
@@ -55,10 +79,18 @@ export default function ProjectsPage() {
     }
   };
 
+  useEffect(() => {
+    fetchProjects();
+  }, [getToken, isLoaded, isSignedIn]);
+
   const handleCreateProject = async (data: { name: string; description: string }) => {
     try {
       setIsCreating(true);
-      await api.createProject(data);
+      const token = await getToken();
+      if (!token) return;
+      const decodedToken = decodeToken(token);
+      const session_id = decodedToken.sid;
+      await api.createProject(session_id, data);
       await fetchProjects();
       setIsDialogOpen(false);
     } catch (err) {
@@ -72,7 +104,11 @@ export default function ProjectsPage() {
     if (!selectedProject) return;
     try {
       setIsEditing(true);
-      await api.updateProject(selectedProject.id, data);
+      const token = await getToken();
+      if (!token) return;
+      const decodedToken = decodeToken(token);
+      const session_id = decodedToken.sid;
+      await api.updateProject(session_id, selectedProject.id, data);
       await fetchProjects();
       setEditDialogOpen(false);
     } catch (err) {
@@ -86,7 +122,11 @@ export default function ProjectsPage() {
     if (!selectedProject) return;
     try {
       setIsDeleting(true);
-      await api.deleteProject(selectedProject.id);
+      const token = await getToken();
+      if (!token) return;
+      const decodedToken = decodeToken(token);
+      const session_id = decodedToken.sid;
+      await api.deleteProject(session_id, selectedProject.id);
       await fetchProjects();
       setDeleteDialogOpen(false);
     } catch (err) {
@@ -95,6 +135,8 @@ export default function ProjectsPage() {
       setIsDeleting(false);
     }
   };
+
+  if (!isSignedIn) return <div>Please sign in</div>;
 
   return (
     <div className="container mx-auto py-8">

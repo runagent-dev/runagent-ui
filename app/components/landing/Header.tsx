@@ -15,22 +15,24 @@ const Header = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           <div className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-            <img
-              src="/lovable-uploads/eb3783d4-b821-454b-879d-1b07174beb31.png"
-              alt="RunAgent Logo"
-              className="h-8 w-auto mr-2"
-            />
-            <span>
-              <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
-                Run
+            <Link href="/" className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/eb3783d4-b821-454b-879d-1b07174beb31.png"
+                alt="RunAgent Logo"
+                className="h-8 w-auto mr-2"
+              />
+              <span>
+                <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
+                  Run
+                </span>
+                Agent
               </span>
-              Agent
-            </span>
+            </Link>
           </div>
 
           <div className="hidden ml-10 space-x-6 md:flex items-center">
             <NavLink href="#features">Features</NavLink>
-            <NavLink href="/dashboard/projects">Dashboard</NavLink>
+            {isSignedIn && <NavLink href="/dashboard/projects">Dashboard</NavLink>}
             <NavLink href="#documentation">Docs</NavLink>
             <NavLink href="#community">Community</NavLink>
           </div>
@@ -39,9 +41,6 @@ const Header = () => {
         <div className="flex items-center gap-4">
           {isSignedIn ? (
             <>
-              <Link href="/dashboard" className="text-sm text-white hover:text-gray-300">
-                Dashboard
-              </Link>
               <UserButton afterSignOutUrl="/" />
               <SignOutButton>
                 <Button 
@@ -85,12 +84,14 @@ const Header = () => {
             <NavLink href="#features" onClick={() => setIsMenuOpen(false)}>
               Features
             </NavLink>
-            <NavLink
-              href="/dashboard/projects"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Dashboard
-            </NavLink>
+            {isSignedIn && (
+              <NavLink
+                href="/dashboard/projects"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </NavLink>
+            )}
             <NavLink href="#documentation" onClick={() => setIsMenuOpen(false)}>
               Docs
             </NavLink>
@@ -100,9 +101,6 @@ const Header = () => {
             <div className="pt-4 flex flex-col space-y-3">
               {isSignedIn ? (
                 <>
-                  <Link href="/dashboard" className="text-sm text-white hover:text-gray-300">
-                    Dashboard
-                  </Link>
                   <UserButton afterSignOutUrl="/" />
                   <SignOutButton>
                     <Button 
