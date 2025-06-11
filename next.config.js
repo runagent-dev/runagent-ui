@@ -2,6 +2,7 @@
 const path = require('path');
 
 const nextConfig = {
+  output: 'standalone',
   experimental: {
     turbo: {
       resolveAlias: {
@@ -11,4 +12,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig
