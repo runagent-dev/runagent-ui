@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { useAuth } from "@clerk/clerk-react";
-import { useAuth as useAuthNextjs } from "@clerk/nextjs";
+import { useAuth } from '@clerk/nextjs';
 
 const API_BASE_URL = 'http://4.213.224.27:8330';
 
-function ensureSessionId(session_id: string | null): asserts session_id is string {
+function ensureSessionId(
+  session_id: string | null
+): asserts session_id is string {
   if (!session_id) {
     throw new Error('Session ID is required. User may not be signed in.');
   }
@@ -63,7 +64,9 @@ export const api = {
   getProjects: async (session_id: string | null): Promise<Project[]> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.get<Project[]>(`/projects?session_id=${session_id}`);
+      const response = await axiosInstance.get<Project[]>(
+        `/projects?session_id=${session_id}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -71,10 +74,15 @@ export const api = {
     }
   },
 
-  getProject: async (session_id: string | null, projectId: string): Promise<Project> => {
+  getProject: async (
+    session_id: string | null,
+    projectId: string
+  ): Promise<Project> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.get<Project>(`/projects/${projectId}?session_id=${session_id}`);
+      const response = await axiosInstance.get<Project>(
+        `/projects/${projectId}?session_id=${session_id}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching project:', error);
@@ -82,10 +90,16 @@ export const api = {
     }
   },
 
-  createProject: async (session_id: string | null, data: { name: string; description: string }): Promise<Project> => {
+  createProject: async (
+    session_id: string | null,
+    data: { name: string; description: string }
+  ): Promise<Project> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.post<Project>(`/projects?session_id=${session_id}`, data);
+      const response = await axiosInstance.post<Project>(
+        `/projects?session_id=${session_id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       console.error('Error creating project:', error);
@@ -93,10 +107,13 @@ export const api = {
     }
   },
 
-  getAgents: async (session_id: string | null, projectId?: string): Promise<Agent[]> => {
+  getAgents: async (
+    session_id: string | null,
+    projectId?: string
+  ): Promise<Agent[]> => {
     ensureSessionId(session_id);
     try {
-      const url = projectId 
+      const url = projectId
         ? `/agents?project_id=${projectId}&session_id=${session_id}`
         : `/agents?session_id=${session_id}`;
       const response = await axiosInstance.get<Agent[]>(url);
@@ -107,10 +124,15 @@ export const api = {
     }
   },
 
-  getAgent: async (session_id: string | null, agentId: string): Promise<Agent> => {
+  getAgent: async (
+    session_id: string | null,
+    agentId: string
+  ): Promise<Agent> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.get<Agent>(`/agents/${agentId}?session_id=${session_id}`);
+      const response = await axiosInstance.get<Agent>(
+        `/agents/${agentId}?session_id=${session_id}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching agent:', error);
@@ -121,7 +143,9 @@ export const api = {
   getTemplates: async (session_id: string | null): Promise<Template[]> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.get<Template[]>(`/templates?session_id=${session_id}`);
+      const response = await axiosInstance.get<Template[]>(
+        `/templates?session_id=${session_id}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching templates:', error);
@@ -129,10 +153,15 @@ export const api = {
     }
   },
 
-  getTemplate: async (session_id: string | null, templateId: string): Promise<Template> => {
+  getTemplate: async (
+    session_id: string | null,
+    templateId: string
+  ): Promise<Template> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.get<Template>(`/templates/${templateId}?session_id=${session_id}`);
+      const response = await axiosInstance.get<Template>(
+        `/templates/${templateId}?session_id=${session_id}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching template:', error);
@@ -140,15 +169,21 @@ export const api = {
     }
   },
 
-  createTemplate: async (session_id: string | null, data: { 
-    name: string; 
-    framework: string;
-    complexity: string;
-    description: string 
-  }): Promise<Template> => {
+  createTemplate: async (
+    session_id: string | null,
+    data: {
+      name: string;
+      framework: string;
+      complexity: string;
+      description: string;
+    }
+  ): Promise<Template> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.post<Template>(`/templates?session_id=${session_id}`, data);
+      const response = await axiosInstance.post<Template>(
+        `/templates?session_id=${session_id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       console.error('Error creating template:', error);
@@ -163,7 +198,10 @@ export const api = {
   ): Promise<Project> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.put<Project>(`/projects/${projectId}?session_id=${session_id}`, data);
+      const response = await axiosInstance.put<Project>(
+        `/projects/${projectId}?session_id=${session_id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       console.error('Error updating project:', error);
@@ -171,17 +209,25 @@ export const api = {
     }
   },
 
-  deleteProject: async (session_id: string | null, projectId: string): Promise<void> => {
+  deleteProject: async (
+    session_id: string | null,
+    projectId: string
+  ): Promise<void> => {
     ensureSessionId(session_id);
     try {
-      await axiosInstance.delete(`/projects/${projectId}?session_id=${session_id}`);
+      await axiosInstance.delete(
+        `/projects/${projectId}?session_id=${session_id}`
+      );
     } catch (error) {
       console.error('Error deleting project:', error);
       throw error;
     }
   },
 
-  deleteAgent: async (session_id: string | null, agentId: string): Promise<void> => {
+  deleteAgent: async (
+    session_id: string | null,
+    agentId: string
+  ): Promise<void> => {
     ensureSessionId(session_id);
     try {
       await axiosInstance.delete(`/agents/${agentId}?session_id=${session_id}`);
@@ -191,10 +237,16 @@ export const api = {
     }
   },
 
-  getAgentSummary: async (session_id: string | null, projectId: string, agentId: string): Promise<any> => {
+  getAgentSummary: async (
+    session_id: string | null,
+    projectId: string,
+    agentId: string
+  ): Promise<any> => {
     ensureSessionId(session_id);
     try {
-      const response = await axiosInstance.get(`/projects/${projectId}/agents/${agentId}/summary?session_id=${session_id}`);
+      const response = await axiosInstance.get(
+        `/projects/${projectId}/agents/${agentId}/summary?session_id=${session_id}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching agent summary:', error);
@@ -210,5 +262,5 @@ export const api = {
       console.error('Error syncing user:', error);
       throw error;
     }
-  }
-}; 
+  },
+};

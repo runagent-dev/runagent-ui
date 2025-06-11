@@ -1,104 +1,113 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
-import { api, Project, Agent } from "@/services/api"
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { api, Project, Agent } from '@/services/api';
+import { useAuth } from '@clerk/nextjs';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Eye } from "lucide-react"
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Eye } from 'lucide-react';
 
-export default function ProjectDetail({
-  params,
-}: {
-  params: { id: string }
-}) {
-  const [project, setProject] = useState<Project | null>(null)
-  const [agents, setAgents] = useState<Agent[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [summaryDialogOpen, setSummaryDialogOpen] = useState(false)
-  const [summaryLoading, setSummaryLoading] = useState(false)
-  const [agentSummary, setAgentSummary] = useState<any>(null)
-  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
+export default function ProjectDetail({ params }: { params: { id: string } }) {
+  const { getToken } = useAuth();
+  const [project, setProject] = useState<Project | null>(null);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [summaryDialogOpen, setSummaryDialogOpen] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [agentSummary, setAgentSummary] = useState<any>(null);
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchProjectAndAgents()
-  }, [params.id])
+    fetchProjectAndAgents();
+  }, [params.id]);
 
   const fetchProjectAndAgents = async () => {
     try {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
+      const token = await getToken();
       const [projectData, agentsData] = await Promise.all([
-        api.getProject(params.id),
-        api.getAgents(params.id)
-      ])
-      setProject(projectData)
-      setAgents(agentsData)
+        api.getProject(token, params.id),
+        api.getAgents(token, params.id),
+      ]);
+      setProject(projectData);
+      setAgents(agentsData);
     } catch (error) {
-      console.error("Error fetching project details:", error)
-      setError("Failed to load project details")
+      console.error('Error fetching project details:', error);
+      setError('Failed to load project details');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const handleEditProject = async (data: { name: string; description: string }) => {
-    if (!project) return
+  const handleEditProject = async (data: {
+    name: string;
+    description: string;
+  }) => {
+    if (!project) return;
     try {
-      setIsEditing(true)
-      await api.updateProject(project.id, data)
-      await fetchProjectAndAgents()
-      setEditDialogOpen(false)
+      setIsEditing(true);
+      const token = await getToken();
+      await api.updateProject(token, project.id, data);
+      await fetchProjectAndAgents();
+      setEditDialogOpen(false);
     } catch (err) {
-      console.error("Failed to edit project:", err)
+      console.error('Failed to edit project:', err);
     } finally {
-      setIsEditing(false)
+      setIsEditing(false);
     }
-  }
+  };
 
   const handleDeleteProject = async () => {
-    if (!project) return
+    if (!project) return;
     try {
-      setIsDeleting(true)
-      await api.deleteProject(project.id)
-      setDeleteDialogOpen(false)
-      router.push("/projects")
+      setIsDeleting(true);
+      const token = await getToken();
+      await api.deleteProject(token, project.id);
+      setDeleteDialogOpen(false);
+      router.push('/projects');
     } catch (err) {
-      console.error("Failed to delete project:", err)
+      console.error('Failed to delete project:', err);
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   const handleViewSummary = async (agent: Agent) => {
-    setSummaryLoading(true)
-    setSelectedAgentId(agent.id)
+    setSummaryLoading(true);
+    setSelectedAgentId(agent.id);
     try {
-      const summary = await api.getAgentSummary(agent.project_id, agent.id)
-      setAgentSummary(summary)
-      setSummaryDialogOpen(true)
+      const token = await getToken();
+      const summary = await api.getAgentSummary(
+        token,
+        agent.project_id,
+        agent.id
+      );
+      setAgentSummary(summary);
+      setSummaryDialogOpen(true);
     } catch (err) {
-      setAgentSummary(null)
-      setSummaryDialogOpen(true)
+      setAgentSummary(null);
+      setSummaryDialogOpen(true);
     } finally {
-      setSummaryLoading(false)
+      setSummaryLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -110,10 +119,7 @@ export default function ProjectDetail({
       >
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold">Project Details</h1>
-          <Button
-            variant="outline"
-            onClick={() => router.back()}
-          >
+          <Button variant="outline" onClick={() => router.back()}>
             ← Back to Projects
           </Button>
         </div>
@@ -129,7 +135,13 @@ export default function ProjectDetail({
               <div className="absolute top-4 right-4 flex gap-2">
                 <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="secondary" size="sm" onClick={() => setEditDialogOpen(true)}>Edit</Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setEditDialogOpen(true)}
+                    >
+                      Edit
+                    </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
@@ -137,32 +149,57 @@ export default function ProjectDetail({
                     </DialogHeader>
                     <form
                       onSubmit={(e) => {
-                        e.preventDefault()
-                        const formData = new FormData(e.currentTarget)
+                        e.preventDefault();
+                        const formData = new FormData(e.currentTarget);
                         handleEditProject({
-                          name: formData.get("name") as string,
-                          description: formData.get("description") as string,
-                        })
+                          name: formData.get('name') as string,
+                          description: formData.get('description') as string,
+                        });
                       }}
                       className="space-y-4"
                     >
                       <div className="space-y-2">
                         <Label htmlFor="edit-name">Project Name</Label>
-                        <Input id="edit-name" name="name" required defaultValue={project?.name} disabled={isEditing} />
+                        <Input
+                          id="edit-name"
+                          name="name"
+                          required
+                          defaultValue={project?.name}
+                          disabled={isEditing}
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="edit-description">Description</Label>
-                        <Input id="edit-description" name="description" required defaultValue={project?.description} disabled={isEditing} />
+                        <Input
+                          id="edit-description"
+                          name="description"
+                          required
+                          defaultValue={project?.description}
+                          disabled={isEditing}
+                        />
                       </div>
-                      <Button type="submit" className="w-full" disabled={isEditing}>
-                        {isEditing ? "Saving..." : "Save Changes"}
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        disabled={isEditing}
+                      >
+                        {isEditing ? 'Saving...' : 'Save Changes'}
                       </Button>
                     </form>
                   </DialogContent>
                 </Dialog>
-                <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <Dialog
+                  open={deleteDialogOpen}
+                  onOpenChange={setDeleteDialogOpen}
+                >
                   <DialogTrigger asChild>
-                    <Button variant="destructive" size="sm" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setDeleteDialogOpen(true)}
+                    >
+                      Delete
+                    </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
@@ -170,17 +207,26 @@ export default function ProjectDetail({
                     </DialogHeader>
                     <div>Are you sure you want to delete this project?</div>
                     <div className="flex justify-end gap-2 mt-4">
-                      <Button variant="ghost" onClick={() => setDeleteDialogOpen(false)}>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setDeleteDialogOpen(false)}
+                      >
                         Cancel
                       </Button>
-                      <Button variant="destructive" onClick={handleDeleteProject} disabled={isDeleting}>
-                        {isDeleting ? "Deleting..." : "Delete"}
+                      <Button
+                        variant="destructive"
+                        onClick={handleDeleteProject}
+                        disabled={isDeleting}
+                      >
+                        {isDeleting ? 'Deleting...' : 'Delete'}
                       </Button>
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
-              <h2 className="text-2xl font-semibold mb-4">Project Information</h2>
+              <h2 className="text-2xl font-semibold mb-4">
+                Project Information
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Name</p>
@@ -229,7 +275,9 @@ export default function ProjectDetail({
                         <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Created At
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -238,7 +286,7 @@ export default function ProjectDetail({
                           key={agent.id}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          whileHover={{ backgroundColor: "hsl(var(--muted))" }}
+                          whileHover={{ backgroundColor: 'hsl(var(--muted))' }}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
                             {agent.name}
@@ -247,9 +295,9 @@ export default function ProjectDetail({
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                agent.status === "active"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-gray-100 text-gray-800"
+                                agent.status === 'active'
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-gray-100 text-gray-800'
                               }`}
                             >
                               {agent.status}
@@ -259,7 +307,16 @@ export default function ProjectDetail({
                             {new Date(agent.created_at).toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <Dialog open={summaryDialogOpen && selectedAgentId === agent.id} onOpenChange={(open) => { setSummaryDialogOpen(open); if (!open) setAgentSummary(null); }}>
+                            <Dialog
+                              open={
+                                summaryDialogOpen &&
+                                selectedAgentId === agent.id
+                              }
+                              onOpenChange={(open) => {
+                                setSummaryDialogOpen(open);
+                                if (!open) setAgentSummary(null);
+                              }}
+                            >
                               <DialogTrigger asChild>
                                 <button
                                   className="p-2 rounded hover:bg-muted"
@@ -277,7 +334,9 @@ export default function ProjectDetail({
                                 {summaryLoading ? (
                                   <div>Loading...</div>
                                 ) : agentSummary ? (
-                                  <pre className="overflow-x-auto whitespace-pre-wrap text-sm bg-muted p-4 rounded max-h-[60vh]">{JSON.stringify(agentSummary, null, 2)}</pre>
+                                  <pre className="overflow-x-auto whitespace-pre-wrap text-sm bg-muted p-4 rounded max-h-[60vh]">
+                                    {JSON.stringify(agentSummary, null, 2)}
+                                  </pre>
                                 ) : (
                                   <div>Failed to load summary.</div>
                                 )}
@@ -295,5 +354,5 @@ export default function ProjectDetail({
         ) : null}
       </motion.div>
     </div>
-  )
-} 
+  );
+}

@@ -1,16 +1,18 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { api, Template } from "@/services/api";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { api, Template } from '@/services/api';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 
 export default function TemplateDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const { getToken } = useAuth();
   const [template, setTemplate] = useState<Template | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,11 +25,12 @@ export default function TemplateDetailPage({
   const fetchTemplate = async () => {
     try {
       setIsLoading(true);
-      const data = await api.getTemplate(params.id);
+      const token = await getToken();
+      const data = await api.getTemplate(token, params.id);
       setTemplate(data);
       setError(null);
     } catch (err) {
-      setError("Failed to fetch template details");
+      setError('Failed to fetch template details');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -45,7 +48,9 @@ export default function TemplateDetailPage({
   if (error || !template) {
     return (
       <div className="container mx-auto py-8">
-        <div className="text-center text-red-500">{error || "Template not found"}</div>
+        <div className="text-center text-red-500">
+          {error || 'Template not found'}
+        </div>
       </div>
     );
   }
@@ -88,4 +93,4 @@ export default function TemplateDetailPage({
       </motion.div>
     </div>
   );
-} 
+}

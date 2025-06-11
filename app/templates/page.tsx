@@ -1,17 +1,18 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useAuth } from '@clerk/nextjs';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Table,
   TableBody,
@@ -19,19 +20,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { api, Template } from "@/services/api";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/table';
+import { api, Template } from '@/services/api';
+import { useRouter } from 'next/navigation';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Eye } from "lucide-react";
+} from '@/components/ui/select';
+import { Eye } from 'lucide-react';
 
 export default function TemplatesPage() {
+  const { getToken } = useAuth();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -46,30 +48,32 @@ export default function TemplatesPage() {
   const fetchTemplates = async () => {
     try {
       setIsLoading(true);
-      const data = await api.getTemplates();
+      const token = await getToken();
+      const data = await api.getTemplates(token);
       setTemplates(data);
       setError(null);
     } catch (err) {
-      setError("Failed to fetch templates");
+      setError('Failed to fetch templates');
       console.error(err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCreateTemplate = async (data: { 
-    name: string; 
+  const handleCreateTemplate = async (data: {
+    name: string;
     framework: string;
     complexity: string;
-    description: string 
+    description: string;
   }) => {
     try {
       setIsCreating(true);
-      await api.createTemplate(data);
+      const token = await getToken();
+      await api.createTemplate(token, data);
       await fetchTemplates(); // Refresh the list after creating
       setIsDialogOpen(false); // Close the dialog after successful creation
     } catch (err) {
-      console.error("Failed to create template:", err);
+      console.error('Failed to create template:', err);
     } finally {
       setIsCreating(false);
     }
@@ -98,10 +102,10 @@ export default function TemplatesPage() {
                   e.preventDefault();
                   const formData = new FormData(e.currentTarget);
                   handleCreateTemplate({
-                    name: formData.get("name") as string,
-                    framework: formData.get("framework") as string,
-                    complexity: formData.get("complexity") as string,
-                    description: formData.get("description") as string,
+                    name: formData.get('name') as string,
+                    framework: formData.get('framework') as string,
+                    complexity: formData.get('complexity') as string,
+                    description: formData.get('description') as string,
                   });
                 }}
                 className="space-y-4"
@@ -112,7 +116,12 @@ export default function TemplatesPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="framework">Framework</Label>
-                  <Input id="framework" name="framework" required disabled={isCreating} />
+                  <Input
+                    id="framework"
+                    name="framework"
+                    required
+                    disabled={isCreating}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="complexity">Complexity</Label>
@@ -129,10 +138,15 @@ export default function TemplatesPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="description">Description</Label>
-                  <Input id="description" name="description" required disabled={isCreating} />
+                  <Input
+                    id="description"
+                    name="description"
+                    required
+                    disabled={isCreating}
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={isCreating}>
-                  {isCreating ? "Creating..." : "Create Template"}
+                  {isCreating ? 'Creating...' : 'Create Template'}
                 </Button>
               </form>
             </DialogContent>
@@ -183,4 +197,4 @@ export default function TemplatesPage() {
       </motion.div>
     </div>
   );
-} 
+}
