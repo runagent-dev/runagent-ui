@@ -36,15 +36,20 @@ jobs:
           # Cloudflare credentials (secrets)
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "Creating .env file for deployment..."
+          cat > .env << EOF
+          DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          CLERK_SECRET_KEY="${{ secrets.CLERK_SECRET_KEY }}"
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
+          NEXT_PUBLIC_URL="${{ vars.NEXT_PUBLIC_URL }}"
+          EOF
           
-          # Sensitive app variables (secrets)
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          echo "Deploying to staging..."
+          pnpm run deploy:staging
           
-          # Public app variables (variables)
-          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
-        run: pnpm run deploy:staging
+          echo "Cleaning up .env file..."
+          rm .env
       
       - name: Deploy to Production Environment
         if: github.ref == 'refs/heads/production' && github.event_name == 'push'
@@ -52,12 +57,17 @@ jobs:
           # Cloudflare credentials (secrets)
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "Creating .env file for deployment..."
+          cat > .env << EOF
+          DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          CLERK_SECRET_KEY="${{ secrets.CLERK_SECRET_KEY }}"
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
+          NEXT_PUBLIC_URL="${{ vars.NEXT_PUBLIC_URL }}"
+          EOF
           
-          # Sensitive app variables (secrets)
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          echo "Deploying to production..."
+          pnpm run deploy:prod
           
-          # Public app variables (variables)
-          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
-        run: pnpm run deploy:prod
+          echo "Cleaning up .env file..."
+          rm .env
