@@ -63,9 +63,6 @@
     "wrangler": "^4.19.2"
   },
   "optionalDependencies": {
-    "@ast-grep/napi-darwin-x64": "^0.24.3",
-    "@ast-grep/napi-linux-x64-gnu": "^0.24.3", 
-    "@ast-grep/napi-win32-x64": "^0.24.3",
     "@img/sharp-darwin-x64": "^0.33.5",
     "@img/sharp-linux-x64": "^0.33.5",
     "@img/sharp-win32-x64": "^0.33.5"
