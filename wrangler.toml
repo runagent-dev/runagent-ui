@@ -6,8 +6,21 @@ compatibility_flags = ["nodejs_compat"]
 directory = ".open-next/assets"
 binding = "ASSETS"
 
+
+# Enable Workers Logs
+[observability]
+enabled = true
+head_sampling_rate = 100
+
+
 [env.staging]
 name = "staging-app"
+routes = [
+  { pattern = "staging.runagent.live/*", zone_name = "runagent.live" }
+]
 
 [env.prod]
 name = "prod-app"
+routes = [
+  { pattern = "runagent.live/*", zone_name = "runagent.live" }
+]
