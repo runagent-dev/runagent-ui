@@ -10,7 +10,7 @@ binding = "ASSETS"
 # Enable Workers Logs
 [observability]
 enabled = true
-head_sampling_rate = 100
+head_sampling_rate = 1
 
 
 [env.staging]
