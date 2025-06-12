@@ -21,7 +21,7 @@ const Hero = () => {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            Kick off with a bang
+            Deploy your Agents
             <br />
             with{' '}
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
