@@ -15,11 +15,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22.1.0'  # Match your exact local version
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: npm ci  # Back to npm ci for consistency
       
       - name: Deploy to Staging Environment
         if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
