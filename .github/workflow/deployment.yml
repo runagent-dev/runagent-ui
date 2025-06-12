@@ -1,0 +1,54 @@
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [staging, production]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Deploy to Staging Environment
+        if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
+        env:
+          # Cloudflare credentials (secrets)
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          
+          # Sensitive app variables (secrets)
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          
+          # Public app variables (variables)
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
+        run: npm run deploy:staging
+      
+      - name: Deploy to Production Environment
+        if: github.ref == 'refs/heads/production' && github.event_name == 'push'
+        env:
+          # Cloudflare credentials (secrets)
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          
+          # Sensitive app variables (secrets)
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          
+          # Public app variables (variables)
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
+        run: npm run deploy:prod
