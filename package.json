@@ -14,6 +14,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
+    "@keystatic/core": "^0.5.47",
+    "@keystatic/next": "^5.0.4",
+    "@markdoc/markdoc": "^0.5.2",
     "@neondatabase/serverless": "^1.0.0",
     "@opennextjs/cloudflare": "^1.2.1",
     "@prisma/client": "^6.8.0",
